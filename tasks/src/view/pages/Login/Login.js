@@ -10,7 +10,6 @@ import {
 function Login(props) {
    
     const history = useHistory();
-    let error='';
 
     function handleLogin(e) {
         e.preventDefault();
@@ -29,7 +28,6 @@ function Login(props) {
             .then((res) => res.json())
             .then((data) => {
                 const { success } = data;
-                const { error } = data;
                 if (success) {
                     const { info } = data;
                     if (info.role === 'master') {

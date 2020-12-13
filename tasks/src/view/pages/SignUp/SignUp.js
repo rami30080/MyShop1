@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+//import { useHistory } from "react-router-dom";
 import React from 'react';
 import './SignUp.css';
 import {
@@ -9,8 +9,6 @@ import {
 
 function SignUp(props) {
    
-    const history = useHistory();
-    let error='';
 
     function handleSignUp(e) {
         e.preventDefault();
@@ -35,9 +33,8 @@ function SignUp(props) {
             .then((res) => res.json())
             .then((data) => {
                 const { success } = data;
-                const { error } = data;
                 if (success) {
-                    
+
                 }
 
                 else {
