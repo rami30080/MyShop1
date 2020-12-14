@@ -69,7 +69,7 @@ function Login(props) {
                 
                 <div className="service">
                     <div className="forgetArea">
-                        <Link className="forgetPassword" to="/forgotPassword">Forgot Password?</Link>
+                        <Link className="forgetPassword" to="/forgetPassword">Forgot Password?</Link>
                     </div>
                     <div className="CreateUserArea">
                         <Link className="createUser" to="/SignUp">SignUp</Link>

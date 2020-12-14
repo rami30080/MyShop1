@@ -1,35 +1,35 @@
-import { useHistory } from "react-router-dom";
+import { useHistory,useParams } from "react-router-dom";
 import React from 'react';
-import './ForgetPassword.css';
+import './CheckKey.css';
 import {
     Link
 } from "react-router-dom";
 
 
 
- function ForgetPassword(props) {
+ function CheckKey(props) {
 
     const history = useHistory();
+    const { email } = useParams();
 
-    function handleForgetPassword(e) {
+    function handleCheckKey(e) {
         e.preventDefault();
 
-        const { userEmailInp } = e.target.elements;
-        const email = userEmailInp.value;
+        const { keyInp } = e.target.elements;
+        const key = keyInp.value;
 
-            fetch('/api/forgetPassword', {
+            fetch('/api/checkSendedPassword', {
                 method: "POST",
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email,key }),
                 headers: {
                     "Content-Type": "application/json",
                 },
             })
                 .then((res) => res.json())
                 .then((data) => {
-                     const { success } = data;
-                    console.log(success)
+                    const { success } = data;
                     if (success) {
-                        return (history.push(`/CheckKey/${email}`))
+                        history.push("/resetPassword")
                     }
                     else {
                         const { error } = data;
@@ -40,14 +40,14 @@ import {
     }
 
     return (
-        <div className='forgetPassword-wrapper'>
+        <div className='CheckKey-wrapper'>
             <div className="block"></div>
-            <div className="forgetPassword">
+            <div className="CheckKey">
                 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@200;300;400;500;531;600;700;800&display=swap" rel="stylesheet"></link>
                 <h3 className="header">Welcome to Rami System</h3>
-                <form id="forgetPasswordForm" onSubmit={handleForgetPassword} >
-                    <input id="userEmail-Inp" name="userEmailInp" placeholder="Enter your Email Adress"></input>
-                    <button type="submit">Submit</button>
+                <form id="CheckKeyForm" onSubmit={handleCheckKey} >
+                    <input id="keyInp" name="keyInp" placeholder="Enter Key"></input>
+                    <button type="submit">Sign Up</button>
                 </form>
                 <div className="service">
                     <div className="HomeArea">
@@ -59,5 +59,5 @@ import {
     )
 }
 
-export default ForgetPassword;
+export default CheckKey;
 
