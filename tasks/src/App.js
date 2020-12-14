@@ -6,8 +6,11 @@ import {
 } from "react-router-dom";
 
 import Login from "./view/pages/Login/Login";
-import forgetPassword from "./view/pages/ForgetPassword/ForgetPassword";
+import ForgetPassword from "./view/pages/ForgetPassword/ForgetPassword";
 import SignUp from "./view/pages/SignUp/SignUp";
+import Admin from "./view/pages/Admin/Admin";
+import CheckKey from "./view/pages/CheckKey/CheckKey";
+import resetPassword from "./view/pages/ResetPassword/ResetPassword";
 
 import './App.css';
 
@@ -20,11 +23,20 @@ function App() {
             <Route exact={true} path="/">
               <Login />
             </Route>
-            <Route path="/forgotPassword">
-              <forgetPassword/>
+            <Route path="/forgetPassword">
+              <ForgetPassword/>
             </Route>
             <Route path="/SignUp">
               <SignUp/>
+            </Route>
+            <Route path="/Admin">
+              <Admin/>
+            </Route>
+            <Route path="/CheckKey">
+              <CheckKey/>
+            </Route>
+            <Route path="/resetPassword">
+              <resetPassword/>
             </Route>
           </Switch>
         </div>

@@ -30,7 +30,7 @@ function Login(props) {
                 const { success } = data;
                 if (success) {
                     const { info } = data;
-                    if (info.role === 'master') {
+                    if (info.role === 'Admin') {
                         history.push("/Admin")
                     }
             
@@ -58,7 +58,7 @@ function Login(props) {
                 </form>
                 <div className="service">
                     <div className="forgetArea">
-                        <Link className="forgetPassword" to="/forgotPassword">Forgot Password?</Link>
+                        <Link className="forgetPassword" to="/forgetPassword">Forgot Password?</Link>
                     </div>
                     <div className="CreateUserArea">
                         <Link className="createUser" to="/SignUp">SignUp</Link>

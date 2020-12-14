@@ -12,6 +12,9 @@ app.use(express.static('public'));
 const mongoose = require('mongoose');
 const e = require('express');
 
+var nodemailer = require('nodemailer')
+var validator = require("email-validator");
+
 const port=process.env.PORT ||4000;
 
 const url = "mongodb+srv://rami30080:mxzmxz123@cluster0.halwb.mongodb.net/tasks";
@@ -22,20 +25,35 @@ mongoose.connect(url, {
     useUnifiedTopology: true
 });
 
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'servicetest468@gmail.com',
+        pass: 'mxzmxz123'
+    }
+});
+
 const users = mongoose.model('users',{
     email:String,
     password:String,
     fname:String,
     lname:String,
     img:String,
-    role:String
+    role:String,
+    groupID:String
   });
+
+const Key = mongoose.model('key',{
+    email:String,
+    keyTime:Date,
+    key:String
+})
   
   //users.insertMany({email:"rami@hotmail.com",password:"123",name:"Rami",img:"pic",role:"master"})
 
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body
-    console.log(email)
+    if (validator.validate(email)) {
     users.find({ email: email }).then(doc => {
         if (doc.length > 0) {
             users.find({ email: email, password: password }).then(docs => {
@@ -52,12 +70,15 @@ app.post('/api/login', (req, res) => {
         res.send({ success: false, error: "Email not found", info: null })
     }
     })
+} else {
+    res.send({ success: false, error: "Email is not Valid", info: null })
+}
             
 })
 
 app.post('/api/SignUp', (req, res) => {
     const { email, password,fname,lname,role} = req.body
-    console.log(email)
+    if (validator.validate(email)) {
     users.find({ email: email }).then(doc => {
         if (doc.length > 0) {
             res.send({ success: false, error: "Email Already In Use", info: null })
@@ -68,15 +89,142 @@ app.post('/api/SignUp', (req, res) => {
             fname:fname,
             lname:lname,
             img:null,
-            role:role}).then(docs=>{
+            role:role,
+            groupID:null}).then(docs=>{
                 if(docs.length>0){
                     res.send({ success: true, error: null, info: null })
                 }
             })
     }
     })
-            
+} else {
+    res.send({ success: false, error: "Email is not Valid", info: null })
+}         
 })
+
+app.post('/api/forgetPassword', (req, res) => {
+    const { email } = req.body;
+    if (validator.validate(email)) {
+        users.find({ email: email }).then(checkEmail => {
+            if (checkEmail.length > 0) {
+                const key = makeid(10)
+
+                var mailOptions = {
+                    from: 'servicetest468@gmail.com',
+                    to: email,
+                    subject: 'Reset Password',
+                    text: `You requested to reset your password. 
+Please copy the code below to continue the password reset process:  
+                    
+${key}`
+                };
+
+                transporter.sendMail(mailOptions, function (err, info) {
+                    if (err) {
+                        return (res.send({ success: false, error: err, info: null }))
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+                Key.insertMany(
+                    {
+                        email: email,
+                        keyTime: Date.now(),
+                        key: key
+                    }
+                )
+                return (res.send({ success: true, error: null, info: { key: key } }))
+
+            } else {
+                res.send({ success: false, error: "Email not found", info: null })
+            }
+        })
+    } else {
+        res.send({ success: false, error: "Email not valid", info: null })
+    }
+})
+
+app.post('/api/checkSendedPassword', (req, res) => {
+    const { email, key } = req.body;
+    Key.find({ email: email, key: key }).then(docs => {
+        docs.map((item, index) => {
+            if (item.email == email) {
+                if (item.key == key) {
+                    if ((Date.now() - item.keyTime) <= 1800000) {
+                        return (res.send({ success: true, error: null, info: null }))
+                    } else {
+                        res.send({ success: false, error: 'time expired', info: null })
+                    }
+                } else {
+                    res.send({ success: false, error: 'key is incorrect', info: null })
+                }
+            } else {
+            }
+        })
+    })
+
+})
+
+app.put('/updatePassword', (req, res) => {
+    const { email, password } = req.body;
+    const passwqord = req.body.password;
+    let regex = /[^A-Za-z0-9]/;
+    let containSepcChars = regex.test(password);
+    if (!containSepcChars) {
+    users.findOne({ email: email }).then(async docs => {
+        if (docs) {
+            // const salt = await bcrypt.genSalt(saltRounds)
+            // const hashpassword = await bcrypt.hash(password, salt)
+            // docs.userInfo.password = hashpassword
+            docs.password=password;
+            docs.save();
+            res.send({ success: true, error: null, info: null })
+
+        } else {
+            res.send({ success: false, error: "email not valid", info: null })
+        }
+
+        users.findOne({ email: email }).then(async docs => {
+            if (docs) {
+                // const name = docs.userInfo.employeeName
+                // const role = docs.userInfo.employeeRole
+                // const id = docs._id
+                // const salt = await bcrypt.genSalt(saltRounds)
+                // const hashpassword = await bcrypt.hash(password, salt)
+                // docs.userInfo.password = hashpassword
+                docs.password=password;
+                docs.save();
+                res.send({ success: true, error: null, info: null })
+                // UserModel.updateOne({ _id: id }, { $set: { userInfo: { employeeName: name, employeeEmail: email, employeeRole: role, password: password } } }).then(doc => {
+                //     if (doc.n > 0) {
+                //         res.send({ success: true, error: null, info: null })
+                //     } else {
+                //         res.send({ success: false, error: null, info: null })
+                //     }
+                // })
+            } else {
+                res.send({ success: false, error: "email not valid", info: null })
+            }
+
+        })
+    })
+}
+else {
+        res.send({ success: false, error: "No Special Characters or White Space allowed in User Password!", info: null })
+    }
+
+})
+
+function makeid(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 
 
 app.listen(port, () => {
