@@ -1,0 +1,89 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
+header, main, footer, nav, aside, section, div
+{
+    display: block;
+}
+h1
+{
+    background-repeat: no-repeat;
+    margin: 0 auto;
+    width: 500px;
+    height: 100px;
+    margin-top: 20px;
+    margin-bottom: 28px;
+}
+#loginForm
+{
+    background-repeat: no-repeat;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    margin-top: 100px;
+    margin-bottom: 90px;
+    align-content: center;
+}
+.service
+{
+    background-repeat: no-repeat;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    margin-top: 200px;
+    margin-bottom: 90px;
+}
+.forgetArea
+{
+    background-repeat: no-repeat;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+}
+.CreateUserArea
+{
+    background-repeat: no-repeat;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    
+}
+.login-main-text{
+    margin-top: 20%;
+    padding: 60px;
+    color: #fff;
+}
+.login-main-text h1{
+    font-weight: 300;
+}
+.sidenav 
+{
+    height: 100%;
+    background-color: #000;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+@media screen and (max-height: 450px){
+    .sidenav {padding-top: 15px;}
+}
+@media screen and (min-width: 768px){
+
+    .sidenav{
+        width: 40%;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+    }
+    #login-form{
+        margin-top: 80%;
+    }
+
+}
+.btn-black{
+    background-color: #000 !important;
+    color: #fff;
+}
+
