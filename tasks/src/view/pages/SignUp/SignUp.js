@@ -52,20 +52,23 @@ function SignUp(props) {
 
     return (
         <div className='signUp-wrapper'>
+             <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"></link>
+            <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+            <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
             <div className="block"></div>
             <div className="signUp">
                 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@200;300;400;500;531;600;700;800&display=swap" rel="stylesheet"></link>
                 <h3 className="header">Welcome to Rami System</h3>
                 <form id="signUpForm" onSubmit={handleSignUp} >
-                    <input id="userEmail-Inp" name="userEmailInp" placeholder="Enter your Email Adress"></input>
-                    <input id="userFname-Inp" name="userFnameInp" placeholder="Enter your First Name"></input>
-                    <input id="userLname-Inp" name="userLnameInp" placeholder="Enter your Last Name"></input>
-                    <input id="userPsw-Inp1" type="password" name="userPswInp1" placeholder="Enter your Password"></input>
-                    <input id="userPsw-Inp2" type="password" name="userPswInp2" placeholder="re-Enter your Password"></input>
-                    <select name="roleInp" id="roleInp">
+                   <label>Email Address:</label><input id="userEmail-Inp" name="userEmailInp" placeholder="Enter your Email Adress"></input><br></br>
+                    <label>First Name:</label><input id="userFname-Inp" name="userFnameInp" placeholder="Enter your First Name"></input><br></br>
+                    <label>Last Name:</label><input id="userLname-Inp" name="userLnameInp" placeholder="Enter your Last Name"></input><br></br>
+                    <label>Password:</label><input id="userPsw-Inp1" type="password" name="userPswInp1" placeholder="Enter your Password"></input><br></br>
+                    <label>Re enter your Password:</label><input id="userPsw-Inp2" type="password" name="userPswInp2" placeholder="re-Enter your Password"></input><br></br>
+                    <label>Role:</label><select name="roleInp" id="roleInp">
                         <option  value="Admin">Mother</option>
                         <option value="User">Family Member</option>
-                    </select>
+                    </select><br></br>
                     <button type="submit">Sign Up</button>
                 </form>
                 <div className="service">
