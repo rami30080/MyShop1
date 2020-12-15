@@ -1,5 +1,6 @@
-import { useHistory,useParams } from "react-router-dom";
+
 import React from 'react';
+import { useHistory,useParams} from "react-router-dom";
 import './CheckKey.css';
 import {
     Link
@@ -7,17 +8,18 @@ import {
 
 
 
+
  function CheckKey(props) {
 
     const history = useHistory();
-    const { email } = useParams();
+    const {email} = useParams();
 
     function handleCheckKey(e) {
         e.preventDefault();
 
         const { keyInp } = e.target.elements;
         const key = keyInp.value;
-
+        
             fetch('/api/checkSendedPassword', {
                 method: "POST",
                 body: JSON.stringify({ email,key }),
@@ -29,7 +31,7 @@ import {
                 .then((data) => {
                     const { success } = data;
                     if (success) {
-                        history.push("/resetPassword")
+                        history.push(`/ResetPassword/${email}`)
                     }
                     else {
                         const { error } = data;

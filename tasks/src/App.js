@@ -10,7 +10,7 @@ import ForgetPassword from "./view/pages/ForgetPassword/ForgetPassword";
 import SignUp from "./view/pages/SignUp/SignUp";
 import Admin from "./view/pages/Admin/Admin";
 import CheckKey from "./view/pages/CheckKey/CheckKey";
-import resetPassword from "./view/pages/ResetPassword/ResetPassword";
+import ResetPassword from "./view/pages/ResetPassword/ResetPassword";
 
 import './App.css';
 
@@ -32,11 +32,11 @@ function App() {
             <Route path="/Admin">
               <Admin/>
             </Route>
-            <Route path="/CheckKey">
+            <Route path="/CheckKey/:email">
               <CheckKey/>
             </Route>
-            <Route path="/resetPassword">
-              <resetPassword/>
+            <Route path="/ResetPassword/:email">
+              <ResetPassword/>
             </Route>
           </Switch>
         </div>

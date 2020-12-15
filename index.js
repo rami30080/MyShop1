@@ -147,25 +147,30 @@ ${key}`
 app.post('/api/checkSendedPassword', (req, res) => {
     const { email, key } = req.body;
     Key.find({ email: email, key: key }).then(docs => {
+        if(docs.length>0)
+        {
         docs.map((item, index) => {
             if (item.email == email) {
                 if (item.key == key) {
                     if ((Date.now() - item.keyTime) <= 1800000) {
                         return (res.send({ success: true, error: null, info: null }))
                     } else {
-                        res.send({ success: false, error: 'time expired', info: null })
+                        return (res.send({ success: false, error: 'time expired', info: null }))
                     }
                 } else {
-                    res.send({ success: false, error: 'key is incorrect', info: null })
+                    return (res.send({ success: false, error: 'key is incorrect', info: null }))
                 }
-            } else {
-            }
+            } 
         })
+    }else{
+        return (res.send({ success: false, error: 'key is incorrect', info: null }))
+
+    }
     })
 
 })
 
-app.put('/updatePassword', (req, res) => {
+app.put('/api/updatePassword', (req, res) => {
     const { email, password } = req.body;
     const passwqord = req.body.password;
     let regex = /[^A-Za-z0-9]/;
@@ -177,11 +182,11 @@ app.put('/updatePassword', (req, res) => {
             // const hashpassword = await bcrypt.hash(password, salt)
             // docs.userInfo.password = hashpassword
             docs.password=password;
-            docs.save();
-            res.send({ success: true, error: null, info: null })
+            await docs.save();
+            return (res.send({ success: true, error: null, info: null }))
 
         } else {
-            res.send({ success: false, error: "email not valid", info: null })
+            return (res.send({ success: false, error: "email not valid", info: null }))
         }
 
         users.findOne({ email: email }).then(async docs => {
@@ -193,8 +198,8 @@ app.put('/updatePassword', (req, res) => {
                 // const hashpassword = await bcrypt.hash(password, salt)
                 // docs.userInfo.password = hashpassword
                 docs.password=password;
-                docs.save();
-                res.send({ success: true, error: null, info: null })
+                await docs.save();
+                return (res.send({ success: true, error: null, info: null }))
                 // UserModel.updateOne({ _id: id }, { $set: { userInfo: { employeeName: name, employeeEmail: email, employeeRole: role, password: password } } }).then(doc => {
                 //     if (doc.n > 0) {
                 //         res.send({ success: true, error: null, info: null })
@@ -203,7 +208,7 @@ app.put('/updatePassword', (req, res) => {
                 //     }
                 // })
             } else {
-                res.send({ success: false, error: "email not valid", info: null })
+                return (res.send({ success: false, error: "email not valid", info: null }))
             }
 
         })
