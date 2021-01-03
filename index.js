@@ -48,8 +48,13 @@ const Key = mongoose.model('key',{
     keyTime:Date,
     key:String
 })
+const tasks = mongoose.model('tasks',{
+    user:{fname:String,lname:String,userID:String,groupID:String,role:String},
+    task:{topic:String,desc:String,level:Number}
+  });
+
   
-  //users.insertMany({email:"rami@hotmail.com",password:"123",name:"Rami",img:"pic",role:"master"})
+  //tasks.insertMany({user:{fname:"Rami",lname:"Ayoub",userID:"31",groupID:"2",role:"User"},task:{topic:"Bede akol",desc:"kosa w waraq",level:2}})
 
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body
