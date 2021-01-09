@@ -48,8 +48,8 @@ const Key = mongoose.model('key',{
     keyTime:Date,
     key:String
 })
-const tasks = mongoose.model('tasks',{
-    user:{fname:String,lname:String,userID:String,groupID:String,role:String},
+const Tasks = mongoose.model('tasks',{
+    user:{fname:String,lname:String,email:String,userID:String,groupID:String,role:String},
     task:{topic:String,desc:String,level:Number}
   });
 
@@ -81,21 +81,34 @@ app.post('/api/login', (req, res) => {
             
 })
 
-app.post('/api/SignUp', (req, res) => {
+app.post('/api/SignUp', async(req, res) => {
     const { email, password,fname,lname,role} = req.body
+
+     
     if (validator.validate(email)) {
-    users.find({ email: email }).then(doc => {
+    users.find({ email: email }).then( doc => {
         if (doc.length > 0) {
             res.send({ success: false, error: "Email Already In Use", info: null })
         }
         else{
+
+// -------------------------------------------------------
+            var result = '';
+    var characters = '0123456789';
+    var charactersLength = characters.length;
+
+    for (var i = 0; i < 8; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+// -------------------------------------------------------
+
         users.insertMany({email:email,
             password:password,
             fname:fname,
             lname:lname,
             img:null,
             role:role,
-            groupID:null}).then(docs=>{
+            groupID:result}).then(docs=>{
                 if(docs.length>0){
                     res.send({ success: true, error: null, info: null })
                 }
@@ -106,6 +119,27 @@ app.post('/api/SignUp', (req, res) => {
     res.send({ success: false, error: "Email is not Valid", info: null })
 }         
 })
+
+function makeGroupId(length)
+{
+    var result = '';
+    var characters = '0123456789';
+    var charactersLength = characters.length;
+
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    users.find({groupID:result}).then(doc=>{
+        if(doc.length>0)
+        {
+            return makeGroupId(8);
+        }else{
+            return result;
+        }
+    })
+    
+
+}
 
 app.post('/api/forgetPassword', (req, res) => {
     const { email } = req.body;
@@ -225,6 +259,22 @@ else {
 
 })
 
+app.get('/api/getTasks', (req, res) => {
+    const { groupID} = req.body;
+    Tasks.find({ user:{groupID:groupID} }).then(docs => {
+        let tasks=[];
+        docs.map((element,index),()=>{
+            tasks.push({user:{fname:String,role:String},
+                task:{topic:String,desc:String,level:Number}});
+        })
+        
+        res.send({ success: true, error: null, info: tasks })
+        
+
+    })
+
+})
+
 function makeid(length) {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -235,6 +285,7 @@ function makeid(length) {
     }
     return result;
 }
+
 
 
 app.listen(port, () => {

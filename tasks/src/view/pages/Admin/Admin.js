@@ -1,54 +1,38 @@
 import { useHistory } from "react-router-dom";
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import './Admin.css';
-import {
-    Link
-} from "react-router-dom";
+
 
 
 
 function Admin(props) {
-   
+
     const history = useHistory();
+        const [users, setUsers] = useState([]);
+    const [acivePage, setAcivePage] = useState(false)
 
-    // function handleLogin(e) {
-    //     e.preventDefault();
 
-    //     const { userEmailInp, userPswInp } = e.target.elements;
-    //     const email = userEmailInp.value;
-    //     const password = userPswInp.value;
-    //     console.log(email)
-    //     fetch('/api/login', {
-    //         method: "POST",
-    //         body: JSON.stringify({ email, password }),
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //     })
-    //         .then((res) => res.json())
-    //         .then((data) => {
-    //             const { success } = data;
-    //             if (success) {
-    //                 const { info } = data;
-    //                 if (info.role === 'Admin') {
-    //                     history.push("/Admin")
-    //                 }
-            
-    //             }
+    //-------------------------------------
 
-    //             else {
-    //                 const { error } = data;
-    //                 alert(error)
-
-    //             }
-
-    //         });
-    // }
+    
+    useEffect(() => {
+        fetch('/api/getTasks')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success == true) {
+                    setUsers(data.info.tasks);
+                }
+                else {
+                    alert(data.error)
+                }
+            })
+    }, []);
+    
 
     return (
         <div className='page-wrapper'>
             <div className=''>
-                
+
             </div>
         </div>
     )
