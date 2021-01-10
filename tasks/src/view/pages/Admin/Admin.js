@@ -1,6 +1,7 @@
 import { useHistory } from "react-router-dom";
 import React,{useEffect,useState} from 'react';
 import './Admin.css';
+import UserRow from './UserRow';
 
 
 
@@ -8,7 +9,7 @@ import './Admin.css';
 function Admin(props) {
 
     const history = useHistory();
-        const [users, setUsers] = useState([]);
+        const [tasks, setTasks] = useState([]);
     const [acivePage, setAcivePage] = useState(false)
 
 
@@ -16,11 +17,18 @@ function Admin(props) {
 
     
     useEffect(() => {
-        fetch('/api/getTasks')
+        let groupID=80128623;
+        fetch('/api/getTasks', {
+            method: "POST",
+            body: JSON.stringify({ groupID}),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
             .then(res => res.json())
             .then(data => {
                 if (data.success == true) {
-                    setUsers(data.info.tasks);
+                    setTasks(data.info);
                 }
                 else {
                     alert(data.error)
@@ -32,7 +40,7 @@ function Admin(props) {
     return (
         <div className='page-wrapper'>
             <div className=''>
-
+            {tasks.map(task => <UserRow setTasks={setTasks} task={task}/>)}
             </div>
         </div>
     )

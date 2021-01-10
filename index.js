@@ -54,7 +54,7 @@ const Tasks = mongoose.model('tasks',{
   });
 
   
-  //tasks.insertMany({user:{fname:"Rami",lname:"Ayoub",userID:"31",groupID:"2",role:"User"},task:{topic:"Bede akol",desc:"kosa w waraq",level:2}})
+  //Tasks.insertMany({user:{fname:"Luna",lname:"Ayoub",userID:"31",groupID:"80128623",role:"User"},task:{topic:"Bede akol",desc:"kosa w waraq",level:2}})
 
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body
@@ -91,9 +91,11 @@ app.post('/api/SignUp', async(req, res) => {
             res.send({ success: false, error: "Email Already In Use", info: null })
         }
         else{
-
+            
+            if(role == "Admin")
+            {
 // -------------------------------------------------------
-            var result = '';
+    var result = '';
     var characters = '0123456789';
     var charactersLength = characters.length;
 
@@ -101,6 +103,9 @@ app.post('/api/SignUp', async(req, res) => {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
 // -------------------------------------------------------
+            }else{
+                var result = null;
+            }
 
         users.insertMany({email:email,
             password:password,
@@ -259,16 +264,26 @@ else {
 
 })
 
-app.get('/api/getTasks', (req, res) => {
+app.post('/api/getTasks', async(req, res) => {
     const { groupID} = req.body;
-    Tasks.find({ user:{groupID:groupID} }).then(docs => {
-        let tasks=[];
-        docs.map((element,index),()=>{
-            tasks.push({user:{fname:String,role:String},
-                task:{topic:String,desc:String,level:Number}});
-        })
+    await Tasks.find({ "user.groupID":groupID }).then( docs => {
+        if(docs.length>0){
+            let tasks=[];
+            for (let index = 0; index < docs.length; index++) {
+                tasks.push({user:{fname:docs[index].user.fname,userID:docs[index].user.userID,role:docs[index].user.role},
+                    task:{topic:docs[index].task.topic,desc:docs[index].task.desc,level:docs[index].task.level}});            
+                }
+            // docs.map((element,index),async()=>{
+            //     console.log(element[index].user)
+            //      tasks.push({user:{fname:element[index].user.fname,userID:element[index].user.userID,role:element[index].user.role},
+            //         task:{topic:element[index].task.topic,desc:element[index].task.desc,level:element[index].task.level}});
+            // })
+            console.log(tasks)
+            res.send({ success: true, error: null, info: tasks })
+        }else{
+            res.send({ success: false, error: 'Empty', info: null })
+        }
         
-        res.send({ success: true, error: null, info: tasks })
         
 
     })
